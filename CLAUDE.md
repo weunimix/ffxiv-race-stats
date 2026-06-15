@@ -6,23 +6,53 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 FFXIV 高难首杀竞速年鉴 — a static web platform aggregating Final Fantasy XIV world-first raid race rankings, strategy guides, news, and live stream links. Currently in prototype phase with two static screens sharing a single in-memory data layer.
 
+Planned pipeline: Operations staff → PI Agent (template/validate) → GitHub → CI → Cloudflare Pages. The Agent handles content styling, data validation, and commit hygiene — operations staff never touch `data.js` directly.
+
+Design docs live in `docs/`:
+- `mvp-requirements.md` — product requirements for the full 7-page MVP
+- `agent-backend-design.md` — Agent backend design, dual-track branch model, CI pipeline
+
 ## Running / Viewing
 
 No build step, no dependencies. Open `index.html` or `live.html` directly in a browser, or serve with any static HTTP server:
 
 ```bash
-# Python (any version)
 python -m http.server 8000
-
-# Or just open directly
-open index.html
+# Or open index.html directly
 ```
 
 There is no `package.json`, no bundler, no test runner, and no linter yet.
 
+## Deployment
+
+**Cloudflare Pages** connected to this GitHub repo. Push to `main` → auto-deploy to production. Push to any branch → auto-generated preview URL.
+
+| Environment | Trigger | URL |
+|-------------|---------|-----|
+| **Production** | PR merge to `main` | `ffxiv-race-stats.pages.dev` |
+| **Preview** | Push to any branch | `*.ffxiv-race-stats.pages.dev` |
+
+No build command needed — Cloudflare Pages serves the repo root as-is.
+
+## Branching Model
+
+**Dual-track** — development and operations use separate branch prefixes, merged into `main` via PR only:
+
+```
+feature/*    Developer feature/fix work       → PR → Code Review → main
+content/*    Agent-driven data.js updates     → PR → CI + Visual → main
+```
+
+| Rule | Detail |
+|------|--------|
+| No direct push to `main` | All changes go through PR |
+| `content/*` is Agent-only | Agent never touches `feature/*` or `main` directly |
+| CI gates every PR | Syntax, schema integrity, data range checks |
+| Conflict resolution | If a `feature/*` changes schema, Agent reads CI logs and regenerates `data.js` |
+
 ## Architecture
 
-**Screen-file-first:** Each user-facing screen is its own HTML file. `index.html` is the launcher/overview (ranking TOP 10, news ticker, broadcaster sidebar). `live.html` is a dedicated, expanded live tracker with click-to-expand player detail rows.
+**Screen-file-first:** Each user-facing screen is its own HTML file. `index.html` is the launcher/overview (ranking TOP 15, news ticker, broadcaster sidebar, race timer, sponsor widget). `live.html` is a dedicated, expanded live tracker with click-to-expand player detail rows.
 
 **Data layer:** `data.js` defines a single global `RACE_DATA` object consumed by both screens. It is designed as a swappable module — replace this one file to switch from static placeholder data to a dynamic data source (CMS, API) without touching UI structure.
 
@@ -44,6 +74,8 @@ Both screens use IIFEs to render DOM from `RACE_DATA` on load. There is no frame
 | `broadcasters[]` | `{ id, name, platform, url }` |
 
 Helper constants: `ROLE_COLORS` maps `tank`/`healer`/`dps` to CSS color strings. `PHASE_ORDER` is an array of phase names for sorting/comparison.
+
+Planned: `schema/` directory with JSON Schema files (`team.schema.json`, `news.schema.json`, etc.) as the shared contract between CI validation and the Agent pipeline.
 
 ## Design System
 
