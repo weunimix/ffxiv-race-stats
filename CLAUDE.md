@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-FFXIV 高难首杀竞速年鉴 — a static web platform aggregating Final Fantasy XIV world-first raid race rankings, strategy guides, news, and live stream links. Currently in prototype phase with two static screens sharing a single in-memory data layer.
+FFXIV 高难首杀竞速网站 — a static web platform aggregating Final Fantasy XIV world-first raid race rankings, strategy guides, news, and live stream links. Currently in prototype phase with two static screens sharing a single in-memory data layer.
 
 Planned pipeline: Operations staff → PI Agent (template/validate) → GitHub → CI → Cloudflare Pages. The Agent handles content styling, data validation, and commit hygiene — operations staff never touch `data.js` directly.
 
