@@ -8,6 +8,10 @@ Thumbs.db
 *.swp
 *.swo
 
+# Claude Code (per-developer tooling, not shared)
+.claude/
+CLAUDE.md
+
 # Backup files
 *.bak
 
