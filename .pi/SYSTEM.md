@@ -27,8 +27,12 @@
 - 修改前先读取 `data.js` 当前内容
 - 修改后运行 `node scripts/validate-data.js` 自检，通过后再 push
 - push 后通过 `gh pr create --base main` 创建 PR，CI 自动运行
-- push 后自动构造预览链接：`https://<分支名净化>.ffxiv-race-stats.pages.dev`
-  （净化规则：`/` → `-`，全小写，取前 28 字符）
+- push 后创建 PR，等待 Cloudflare Pages bot 部署完成，从 bot 评论中获取真实预览链接：
+  ```bash
+  gh pr view <N> --comments --json comments --jq \
+    '.comments[] | select(.author.login=="cloudflare-workers-and-pages") | .body'
+  ```
+  从返回的 HTML/文本中提取 **Branch Preview URL**（以分支别名结尾，格式如 `https://content-xxx.ffxiv-race-stats.pages.dev`），不要手动构造。
 - PR 创建后告知运营预览链接 + PR 链接，等待确认
 - 收到运营确认后，CI 通过则 `gh pr merge --squash --delete-branch`
 
