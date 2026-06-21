@@ -24,10 +24,11 @@ python -m http.server 8000
 | | 开发轨 | 运营轨 |
 |---|--------|--------|
 | **分支前缀** | `feature/*`、`fix/*` | `content/*` |
-| **变更对象** | HTML / CSS / JS / Schema / CI | `data.js` 数据值 |
+| **变更对象** | `constants.js`、`schema/`、HTML / CSS / JS / CI | `data.js` 数据值 |
 | **操作者** | 开发者 | Agent（代表运营人员） |
 | **质量把关** | Code Review | 预览确认 |
 | **频率** | 低（周级别） | 高（每天多次） |
+| **文件保护** | CI 硬阻断 `feature/*` 修改 `data.js` | CI 硬阻断 `content/*` 修改其他文件 |
 
 ## 设计文档
 
