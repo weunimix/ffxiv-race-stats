@@ -14,7 +14,7 @@ const RACE_DATA = {
 
   teams: [
     {
-      id: "t1", name: "[队伍名 1]", rank: 2, bossHP: 18.3, phase: "P4", region: "JP", isLive: true,
+      id: "t1", name: "[队伍名 1]", rank: 1, bossHP: 18.3, phase: "P4", region: "JP", isLive: true,
       players: [
         { job: "PLD", role: "tank", stream: "#", streaming: true },
         { job: "WAR", role: "tank", stream: "#", streaming: true },
@@ -27,7 +27,7 @@ const RACE_DATA = {
       ]
     },
     {
-      id: "t2", name: "[队伍名 2]", rank: 1, bossHP: 0.0, phase: "CLEAR", region: "NA", isLive: true,
+      id: "t2", name: "[队伍名 2]", rank: 2, bossHP: 0.0, phase: "CLEAR", region: "NA", isLive: true,
       players: [
         { job: "DRK", role: "tank", stream: "#", streaming: true },
         { job: "GNB", role: "tank", stream: "#", streaming: false },
