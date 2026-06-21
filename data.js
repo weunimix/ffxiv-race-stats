@@ -1,4 +1,6 @@
 // FFXIV 高难首杀竞速聚合平台 — 共享数据层
+// 运营侧（PI Agent）维护，content/* 分支唯一写入目标。
+// 开发者修改数据结构请改 schema/ 和 constants.js，勿改此文件。
 // 后期切换动态数据源时不改 UI 结构，只需替换此文件。
 
 const RACE_DATA = {
@@ -203,13 +205,3 @@ const RACE_DATA = {
 
   sponsors: []
 };
-
-// 角色颜色映射
-const ROLE_COLORS = {
-  tank:   "oklch(48% 0.12 255)",   // 蓝
-  healer: "oklch(48% 0.12 170)",   // 青绿
-  dps:    "oklch(48% 0.14 25)"     // 红
-};
-
-// 阶段排序权重
-const PHASE_ORDER = ["P1", "P2", "P3", "P4", "CLEAR"];

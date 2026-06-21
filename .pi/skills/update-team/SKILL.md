@@ -29,7 +29,8 @@ description: >
 
 ### Step 3: 校验
 
-- phase 是否在 PHASE_ORDER 中？新 phase 是否 ≥ 当前 phase？
+- phase 是否在 PHASE_ORDER 中？（PHASE_ORDER 定义在 `constants.js`，以该文件中的值为准）
+- 新 phase 是否 ≥ 当前 phase？
 - bossHP 是否 ≤ 当前 HP？（进度不倒退）
 - 如果 HP = 0 且 phase = FINAL：自动标记 isLive = false，该队已通关
 - 如果 HP < 30 且 phase 仍为 P1：提请运营确认是否数据有误

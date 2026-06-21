@@ -1,0 +1,12 @@
+{
+  "name": "ffxiv-race-stats",
+  "version": "1.0.0",
+  "private": true,
+  "description": "FFXIV 高难首杀竞速排行聚合平台 — 静态站点，零运行时依赖。",
+  "scripts": {
+    "validate": "node scripts/validate-data.js"
+  },
+  "devDependencies": {
+    "ajv": "^8.20.0"
+  }
+}

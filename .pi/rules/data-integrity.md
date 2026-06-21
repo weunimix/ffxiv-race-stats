@@ -43,9 +43,11 @@ description: >
 ## 写入后自检
 
 - 重新读取 `data.js`，确认写入内容与意图一致
-- 运行 `node -e "require('./data.js')"` 等效语法检查（确保文件可解析）
+- 运行 `node scripts/validate-data.js` 自检（确保通过 schema + 值域 + 业务规则三阶段校验）
 - 如有任一检查不通过，修复后重新自检，不通过不 push
 - push 后 CI（GitHub Actions）会再次运行相同检查作为独立防线
+
+**PHASE_ORDER 来源：** `PHASE_ORDER` 等白名单常量定义在 `constants.js`（开发者维护），Agent 不可修改。校验时以 `constants.js` 中的值为准。
 
 ## CI 失败处理
 

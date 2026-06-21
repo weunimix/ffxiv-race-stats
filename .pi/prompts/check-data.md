@@ -12,7 +12,7 @@ argument-hint: ""
 - `meta` 字段是否完整（eventName、edition、dungeon、boss、dataCenter、startTime、status）
 - `teams[]` 每队：id、name、rank、bossHP、phase、region、isLive、8 名 players 均完整
 - rank 无重复、无跳号、无越界
-- phase 在 `PHASE_ORDER` 白名单内
+- phase 在 `PHASE_ORDER` 白名单内（PHASE_ORDER 定义在 `constants.js`）
 - region 在 `['JP','NA','EU','OC','CN','KR']` 内
 - bossHP 在 0-100 区间
 - `news[]` 每条：id、time、title 完整，time 格式正确
