@@ -698,8 +698,6 @@ FFXIVRanking/
 │
 ├── index.html                   # 启动页 / 排名总览
 ├── data.js                      # 数据层（运营侧唯一写入目标）
-├── DESIGN-HANDOFF.md            # 设计交接文档
-├── DESIGN-MANIFEST.json         # 设计交接元数据
 └── CLAUDE.md                    # 项目开发指引
 ```
 
