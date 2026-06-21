@@ -30,18 +30,12 @@ jobs:
           echo "::group::dev 分支 data.js 触碰检查"
           git fetch origin "${{ github.base_ref }}"
           if git diff --name-only "origin/${{ github.base_ref }}...HEAD" | grep -q '^data\.js$'; then
-            if git log "origin/${{ github.base_ref }}..HEAD" --format=%B | grep -q '\[SCHEMA_MIGRATION\]'; then
-              echo "data.js 修改已通过 [SCHEMA_MIGRATION] 标记放行"
-            else
-              echo "::error::feature/* / fix/* PR 不得修改 data.js"
-              echo "::error::数据值变更请走 content/* 分支（由运营 Agent 执行）"
-              echo "::error::如需新增字段/修改结构，请修改 schema/ 和 constants.js"
-              echo "::error::如果这是迁移 PR（建立/变更 schema 时需改 data.js），请在 commit message 中加上 [SCHEMA_MIGRATION]"
-              exit 1
-            fi
-          else
-            echo "检查通过：data.js 未被修改"
+            echo "::error::feature/* / fix/* PR 不得修改 data.js"
+            echo "::error::数据值变更请走 content/* 分支（由运营 Agent 执行）"
+            echo "::error::如需新增字段/修改结构，请修改 schema/ 和 constants.js"
+            exit 1
           fi
+          echo "检查通过：data.js 未被修改"
           echo "::endgroup::"
 
       - name: Check file scope (content/* PR only)

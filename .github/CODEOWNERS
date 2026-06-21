@@ -3,6 +3,8 @@
 *.css            @ffxiv-race-stats/dev-team
 *.js             @ffxiv-race-stats/dev-team
 .github/**       @ffxiv-race-stats/dev-team
+# CI 防线规则 — 项目拥有者审批（必须通过 weunimix review 才能修改）
+.github/workflows/validate.yml     @weunimix
 schema/**        @ffxiv-race-stats/dev-team
 .pi/**           @ffxiv-race-stats/dev-team
 CLAUDE.md        @ffxiv-race-stats/dev-team
