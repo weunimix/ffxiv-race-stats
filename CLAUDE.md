@@ -9,12 +9,11 @@ FFXIV 高难首杀竞速网站 — a static web platform aggregating Final Fanta
 Planned pipeline: Operations staff → PI Agent (template/validate) → GitHub → CI → Cloudflare Pages. The Agent handles content styling, data validation, and commit hygiene — operations staff never touch `data.js` directly.
 
 Design docs live in `docs/`:
-- `mvp-requirements.md` — product requirements for the full 7-page MVP
-- `agent-backend-design.md` — Agent backend design, dual-track branch model, CI pipeline
+- `operations-system-design.md` — 双轨分支模型、权限体系、Agent 能力设计、CI 与质量保障
 
 ## Running / Viewing
 
-No build step, no dependencies. Open `index.html` or `live.html` directly in a browser, or serve with any static HTTP server:
+No build step, no dependencies. Open `index.html` directly in a browser, or serve with any static HTTP server:
 
 ```bash
 python -m http.server 8000
@@ -34,48 +33,103 @@ There is no `package.json`, no bundler, no test runner, and no linter yet.
 
 No build command needed — Cloudflare Pages serves the repo root as-is.
 
-## Branching Model
+## Developer Workflow (CRITICAL)
 
-**Dual-track** — development and operations use separate branch prefixes, merged into `main` via PR only:
+**Violating these rules means your changes skip review and land directly on production — don't do it.**
+
+### Before any change
+
+1. Read [docs/operations-system-design.md](docs/operations-system-design.md) — understand the dual-track model, permission boundaries, and which files you are allowed to touch
+2. Check you are **not** on `main`:
+   ```bash
+   git branch --show-current
+   ```
+
+### Starting work
+
+**Never start from `main`.** Always create a branch:
+
+```bash
+git checkout main && git pull
+git checkout -b feature/<verb>-<noun>    # new feature
+git checkout -b fix/<what>               # bug fix
+```
+
+### Making changes
+
+| Allowed | Forbidden |
+|---------|-----------|
+| `*.html` — page structure, content, styles | Direct edit of `main` branch |
+| `*.css` — stylesheets (if/when external) | Push directly to `main` |
+| `*.js` — schema/structure changes to `data.js`, new JS modules | Edit `data.js` **data values** (that's the ops track) |
+| `.github/**` — CI workflows | Touch `content/*` branches |
+| `schema/**` — JSON Schema | Force push to `feature/*` (squash instead) |
+| `.pi/**` — Agent configuration | |
+| `CLAUDE.md`, `README.md`, `docs/*.md` | |
+
+When you need to change the **structure** of `data.js` (add fields, change types), follow the backward-compatibility rule in the operations design doc (§3.4). Don't change data values at the same time — do schema and values in separate PRs.
+
+### Committing
 
 ```
-feature/*    Developer feature/fix work       → PR → Code Review → main
-content/*    Agent-driven data.js updates     → PR → CI + Visual → main
+<type>: <description>
+
+<optional body>
 ```
 
-| Rule | Detail |
-|------|--------|
-| No direct push to `main` | All changes go through PR |
-| `content/*` is Agent-only | Agent never touches `feature/*` or `main` directly |
-| CI gates every PR | Syntax, schema integrity, data range checks |
-| Conflict resolution | If a `feature/*` changes schema, Agent reads CI logs and regenerates `data.js` |
+Types: `feat`, `fix`, `refactor`, `docs`, `test`, `chore`, `perf`, `ci`.
+
+### Before pushing
+
+- [ ] You are on a `feature/*` or `fix/*` branch, not `main`
+- [ ] Diff contains only files you're authorized to change
+- [ ] No `data.js` **data values** accidentally changed
+- [ ] Commit message follows the format above
+
+### Merging to main
+
+1. Push the branch → Cloudflare Pages auto-generates preview
+2. Create a PR: `feature/*` → `main`
+3. CI must pass
+4. Another developer must approve (Code Review)
+5. **Squash merge** — one clean commit on `main`
+
+**Never self-merge without review.** Even for trivial fixes, create a PR. The only exception is emergency revert of a content merge commit — and that's done by a repo admin, not by you.
 
 ## Architecture
 
-**Screen-file-first:** Each user-facing screen is its own HTML file. `index.html` is the launcher/overview (ranking TOP 15, news ticker, broadcaster sidebar, race timer, sponsor widget). `live.html` is a dedicated, expanded live tracker with click-to-expand player detail rows.
+**Screen-file-first:** `index.html` is the single user-facing page — a launcher/overview with ranking table (TOP 15), news ticker, broadcaster sidebar, race timer, and sponsor widget.
 
-**Data layer:** `data.js` defines a single global `RACE_DATA` object consumed by both screens. It is designed as a swappable module — replace this one file to switch from static placeholder data to a dynamic data source (CMS, API) without touching UI structure.
+**Data layer:** `data.js` defines a single global `RACE_DATA` object consumed by the page. It is designed as a swappable module — replace this one file to switch from static placeholder data to a dynamic data source (CMS, API) without touching UI structure.
 
 ```
-index.html ──┐
-             ├── data.js (RACE_DATA + ROLE_COLORS + PHASE_ORDER)
-live.html  ──┘
+index.html ─── data.js (RACE_DATA + ROLE_COLORS + PHASE_ORDER)
 ```
 
-Both screens use IIFEs to render DOM from `RACE_DATA` on load. There is no framework, no routing, no shared JS modules beyond `data.js`.
+The page uses an IIFE to render DOM from `RACE_DATA` on load. There is no framework, no routing, no shared JS modules beyond `data.js`.
 
-### Data Schema (RACE_DATA)
+### Maintenance Boundary
 
-| Key | Shape |
-|-----|-------|
-| `meta` | `{ eventName, edition, dungeon, boss, dataCenter, startTime, status }` — `status` is `"upcoming" \| "live" \| "ended"` |
-| `teams[]` | `{ id, name, rank, bossHP, phase, region, isLive, players[] }` — each player has `{ job, role, stream, streaming }` |
-| `news[]` | `{ id, time, title, urgent }` |
-| `broadcasters[]` | `{ id, name, platform, url }` |
+```
+运营维护（data.js 数据值）
+├── meta        — eventName, status, startTime, registrationUrl …
+├── teams[]     — 队伍进度 + 8 人配置 + 直播状态
+├── news[]      — 速报条目
+├── broadcasters[] — 转播方
+├── notices[]   — 赛事公告
+├── sponsors[]  — 赞助公示
+└── PHASE_ORDER — 阶段定义
 
-Helper constants: `ROLE_COLORS` maps `tank`/`healer`/`dps` to CSS color strings. `PHASE_ORDER` is an array of phase names for sorting/comparison.
+开发维护（页面代码）
+├── HTML 结构   — 布局、导航、模块框架
+├── CSS 样式    — token、响应式、动画
+├── JS 逻辑     — 计时器、统计聚合、交互
+├── data.js 结构 — schema 设计、字段约束（值由运营维护）
+├── CI / Schema — 校验规则
+└── .pi/**      — Agent 配置
+```
 
-Planned: `schema/` directory with JSON Schema files (`team.schema.json`, `news.schema.json`, etc.) as the shared contract between CI validation and the Agent pipeline.
+**Never edit data values in `data.js` directly — that's the ops track.** When you need new fields or structural changes, see §3.4 of the operations design doc.
 
 ## Design System
 

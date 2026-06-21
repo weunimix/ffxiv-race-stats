@@ -1,0 +1,13 @@
+# 开发侧代码 — 开发者拥有
+*.html           @ffxiv-race-stats/dev-team
+*.css            @ffxiv-race-stats/dev-team
+*.js             @ffxiv-race-stats/dev-team
+.github/**       @ffxiv-race-stats/dev-team
+schema/**        @ffxiv-race-stats/dev-team
+.pi/**           @ffxiv-race-stats/dev-team
+CLAUDE.md        @ffxiv-race-stats/dev-team
+README.md        @ffxiv-race-stats/dev-team
+docs/**          @ffxiv-race-stats/dev-team
+
+# 数据层 — 运营侧拥有
+data.js          @ffxiv-race-stats/ops-agent
