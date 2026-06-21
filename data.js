@@ -197,7 +197,11 @@ const RACE_DATA = {
     { id: "b1", name: "[转播主播 1]", platform: "[平台名]", url: "#", note: "官方合作转播" },
     { id: "b2", name: "[转播主播 2]", platform: "[平台名]", url: "#", note: "特邀解说" },
     { id: "b3", name: "[转播主播 3]", platform: "[平台名]", url: "#", note: "多视角切换" }
-  ]
+  ],
+
+  notices: [],
+
+  sponsors: []
 };
 
 // 角色颜色映射

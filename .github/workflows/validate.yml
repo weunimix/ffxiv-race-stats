@@ -1,0 +1,36 @@
+name: validate
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Validate data.js
+        id: validate
+        run: node scripts/validate-data.js
+
+      - name: Check file scope (content/* PR only)
+        if: startsWith(github.head_ref, 'content/')
+        run: |
+          echo "::group::content/* 分支文件范围检查"
+          CHANGED=$(git diff --name-only "origin/${{ github.base_ref }}...HEAD")
+          EXTRA=$(echo "$CHANGED" | grep -v '^data\.js$' || true)
+          if [ -n "$EXTRA" ]; then
+            echo "::error::content/* PR 只能包含 data.js 变更，发现额外文件："
+            echo "$EXTRA" | while read f; do
+              echo "::error::  - $f"
+            done
+            exit 1
+          fi
+          echo "文件范围检查通过：仅 data.js"
+          echo "::endgroup::"
