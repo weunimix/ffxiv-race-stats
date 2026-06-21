@@ -14,19 +14,6 @@ const RACE_DATA = {
 
   teams: [
     {
-      id: "t1", name: "[队伍名 1]", rank: 2, bossHP: 18.3, phase: "P4", region: "JP", isLive: true,
-      players: [
-        { job: "PLD", role: "tank", stream: "#", streaming: true },
-        { job: "WAR", role: "tank", stream: "#", streaming: true },
-        { job: "WHM", role: "healer", stream: "#", streaming: true },
-        { job: "SCH", role: "healer", stream: "#", streaming: false },
-        { job: "DRG", role: "dps", stream: "#", streaming: true },
-        { job: "NIN", role: "dps", stream: "#", streaming: true },
-        { job: "BLM", role: "dps", stream: "#", streaming: false },
-        { job: "BRD", role: "dps", stream: "#", streaming: true }
-      ]
-    },
-    {
       id: "t2", name: "[队伍名 2]", rank: 1, bossHP: 0.0, phase: "CLEAR", region: "NA", isLive: true,
       players: [
         { job: "DRK", role: "tank", stream: "#", streaming: true },
@@ -37,6 +24,19 @@ const RACE_DATA = {
         { job: "RPR", role: "dps", stream: "#", streaming: true },
         { job: "SMN", role: "dps", stream: "#", streaming: true },
         { job: "DNC", role: "dps", stream: "#", streaming: false }
+      ]
+    },
+    {
+      id: "t1", name: "[队伍名 1]", rank: 2, bossHP: 18.3, phase: "P4", region: "JP", isLive: true,
+      players: [
+        { job: "PLD", role: "tank", stream: "#", streaming: true },
+        { job: "WAR", role: "tank", stream: "#", streaming: true },
+        { job: "WHM", role: "healer", stream: "#", streaming: true },
+        { job: "SCH", role: "healer", stream: "#", streaming: false },
+        { job: "DRG", role: "dps", stream: "#", streaming: true },
+        { job: "NIN", role: "dps", stream: "#", streaming: true },
+        { job: "BLM", role: "dps", stream: "#", streaming: false },
+        { job: "BRD", role: "dps", stream: "#", streaming: true }
       ]
     },
     {
