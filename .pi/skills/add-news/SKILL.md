@@ -68,24 +68,14 @@ gh pr create \
   --base main
 ```
 
-### Step 5: 获取 Cloudflare Pages 预览链接
+### Step 5: ⚠️ 输出合并提醒（必须执行，不可跳过）
 
-**不要手动构造预览链接。** 等待 Cloudflare bot 部署完成后，从 PR 评论中抓取：
-
-```bash
-gh pr view <N> --comments --json comments --jq \
-  '.comments[] | select(.author.login=="cloudflare-workers-and-pages") | .body'
-```
-
-从返回内容中提取 **Branch Preview URL**。如果 bot 尚未评论，等待 10-15 秒后重试，最多 5 次。
-
-### Step 6: ⚠️ 输出合并提醒（必须执行，不可跳过）
-
-获取到预览链接后，必须输出：
+PR 创建完成后，必须输出：
 
 ```
 ✅ PR 已创建：#<N> — https://github.com/<owner>/<repo>/pull/<N>
-   预览链接：<从 Cloudflare bot 抓取的 Branch Preview URL>
+   预览链接：https://<净化后的分支名>.ffxiv-race-stats.pages.dev
+   （分支名净化规则：/ → -，全小写，取前 28 字符）
    CI 校验：https://github.com/<owner>/<repo>/actions/runs/<run_id>
 
 ⚠️ 生产站 https://ffxiv-race-stats.pages.dev 还没有更新。
@@ -95,7 +85,7 @@ gh pr view <N> --comments --json comments --jq \
 
 **不收到运营回复"合并"，绝对不继续。**
 
-### Step 7: 合并（收到运营确认后执行）
+### Step 6: 合并（收到运营确认后执行）
 
 收到运营确认后，先确认 CI 已通过：
 
