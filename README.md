@@ -15,9 +15,11 @@ python -m http.server 8000
 ## 架构
 
 ```
-运营人员 ──→ PI Agent ──→ GitHub ──→ Cloudflare Pages ──→ CDN
+运营人员 ──飞书──→ PI Agent ──→ GitHub ──→ Cloudflare Pages ──→ CDN
 开发者   ──→ Git / IDE ──→ GitHub ──→ Cloudflare Pages ──→ CDN
 ```
+
+运营人员通过 **飞书**（群聊或单聊，自然语言或 @ 机器人）指挥 PI Agent ——`pi-feishu` 扩展提供消息通道，Agent 回复与工具执行进度实时回传飞书。Agent 同时经 `feishu-mcp`（MCP server）具备读写飞书云文档的能力。
 
 双轨模型：开发者和运营人员共享同一个 `main` 分支，通过不同的分支前缀和 PR 流程各司其职。
 
