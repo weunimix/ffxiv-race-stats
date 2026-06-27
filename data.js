@@ -188,6 +188,7 @@ const RACE_DATA = {
   ],
 
   news: [
+    { id: "n99", time: "2026-06-28 03:30", text: "Phase3 链路测试(稍后回退)", urgent: false },
     { id: "n1", time: "14:32:07", text: "[队伍名 1] 进入 P4，Boss HP 剩余 18%", urgent: true },
     { id: "n2", time: "14:28:15", text: "[队伍名 2] 突破 P3，当前 Boss HP 24%", urgent: false },
     { id: "n3", time: "14:15:42", text: "[队伍名 3] P3 Boss 血量首次压入 35% 以下", urgent: false },
